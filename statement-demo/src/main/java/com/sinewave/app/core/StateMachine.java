@@ -21,13 +21,14 @@ public class StateMachine implements Runnable {
         states.put(name, state);
     }
     // Run a already added state directly by providing it's name
-    public void runState(String name) throws Exception {
+    public void runState(String name) {
         if (!states.containsKey(name)) {
             try {
                 throw new Exception("The called state is inexistent!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            return;
         }
         states.get(name).call();
     }
@@ -41,6 +42,7 @@ public class StateMachine implements Runnable {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                return;
             }
             nextState = states.get(nextState).call();
         }
@@ -51,11 +53,7 @@ public class StateMachine implements Runnable {
     }
     // Run pre-set state
     public void runCurrentState() {
-        try {
-            runState(currentState);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        runState(currentState);
     }
 
     // Starts a state-to-state loop on a separate thread which ends when a state method returns a null string
@@ -74,6 +72,7 @@ public class StateMachine implements Runnable {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                return;
             }
             nextState = states.get(nextState).call();
         }
